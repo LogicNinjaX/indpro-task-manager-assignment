@@ -26,7 +26,7 @@ Built with a clean responsive frontend using **HTML, CSS, and JavaScript**, and 
 
 ## GitHub Repository
 
-[Repository Link](YOUR_GITHUB_REPO_LINK)
+[Repository Link](https://github.com/LogicNinjaX/indpro-task-manager-assignment)
 
 ---
 
@@ -36,7 +36,7 @@ Built with a clean responsive frontend using **HTML, CSS, and JavaScript**, and 
 
 * HTML5
 * CSS3
-* Vanilla JavaScript
+* JavaScript
 * Fetch API
 
 ### Backend
@@ -124,9 +124,6 @@ Built with a clean responsive frontend using **HTML, CSS, and JavaScript**, and 
 ```bash
 frontend/
 │── index.html
-│── login.html
-│── register.html
-│── dashboard.html
 │── css/
 │── js/
 ```
@@ -206,6 +203,7 @@ DB_PASS=
 
 JWT_SECRET=
 JWT_EXP=
+ALLOWED_ORIGINS=
 ```
 
 ---
@@ -217,13 +215,13 @@ JWT_EXP=
 Clone the repository
 
 ```bash
-git clone YOUR_REPO_LINK
+git clone https://github.com/LogicNinjaX/indpro-task-manager-assignment
 ```
 
 Navigate to backend
 
 ```bash
-cd backend
+cd task-manager-api
 ```
 
 Run application
