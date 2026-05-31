@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en" class="h-full">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Manager</title>
+    <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&amp;display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+
+<body class="h-full bg-white text-black">
+    <div id="app" class="h-full w-full overflow-auto"><!-- ==================== AUTH SCREEN ==================== -->
+        <div id="auth-screen" class="h-full flex items-center justify-center p-4">
+            <div class="w-full max-w-sm">
+                <h1 class="text-3xl font-bold mb-8 text-center">Task Manager</h1>
+                
+                <!-- Login Form -->
+                <div id="login-form" class="space-y-4">
+                    <h2 class="text-lg font-semibold">Login</h2><input id="login-username" type="text" placeholder="Username"
+                        class="w-full border border-black px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-black">
+                    <input id="login-pass" type="password" placeholder="Password"
+                        class="w-full border border-black px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-black">
+                    <div id="login-error" class="text-xs text-red-600 hidden"></div><button id="login-btn"
+                        class="w-full bg-black text-white py-2 text-sm font-medium hover:bg-gray-800 transition">Login</button>
+                    <p class="text-xs text-center text-gray-500">No account? <button id="show-register" type="button"
+                            class="underline text-black">Register</button></p>
+                </div>
+                
+                <!-- Register Form -->
+                <div id="register-form" class="space-y-4 hidden">
+                    <h2 class="text-lg font-semibold">Register</h2><input id="reg-username" type="text" placeholder="Username"
+                        class="w-full border border-black px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-black">
+                    <input id="reg-email" type="email" placeholder="Email"
+                        class="w-full border border-black px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-black">
+                    <input id="reg-pass" type="password" placeholder="Password (min 6 chars)"
+                        class="w-full border border-black px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-black">
+                    <div id="reg-error" class="text-xs text-red-600 hidden"></div><button id="reg-btn"
+                        class="w-full bg-black text-white py-2 text-sm font-medium hover:bg-gray-800 transition">Register</button>
+                    <p class="text-xs text-center text-gray-500">Have an account? <button id="show-login" type="button"
+                            class="underline text-black">Login</button></p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- ==================== MAIN APP SCREEN ==================== -->
+        <div id="main-screen" class="hidden h-full flex flex-col"><!-- Header -->
+            <header class="border-b border-black px-4 py-3 flex items-center justify-between bg-white">
+                <h1 class="text-lg font-bold">Task Manager</h1>
+                <div class="flex items-center gap-3"><span id="user-name" class="text-xs text-gray-500"></span> <button
+                        id="logout-btn" class="text-xs underline hover:text-gray-600">Logout</button>
+                </div>
+            </header>
+            
+            <!-- Add Task Section -->
+            <div class="border-b border-gray-200 px-4 py-3 bg-white">
+                <div class="flex gap-2 flex-wrap"><input id="task-title" type="text" placeholder="Task title..."
+                        class="flex-1 min-w-[150px] border border-black px-3 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-black">
+                    <input id="task-desc" type="text" placeholder="Description (optional)"
+                        class="flex-1 min-w-[150px] border border-gray-300 px-3 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-black">
+                    <button id="add-task-btn"
+                        class="bg-black text-white px-4 py-1.5 text-sm font-medium hover:bg-gray-800 transition flex items-center gap-1">
+                        <i data-lucide="plus" style="width:14px;height:14px;"></i> Add </button>
+                </div>
+                <div id="add-error" class="text-xs text-red-600 mt-1 hidden"></div>
+            </div>
+            
+            <!-- Loading State -->
+            <div id="loading-state" class="flex-1 flex items-center justify-center">
+                <p class="text-sm text-gray-400">Loading tasks...</p>
+            </div>
+            
+            <!-- Task Board (3 Columns) -->
+            <div id="task-board" class="flex-1 overflow-auto p-4 hidden">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4"><!-- Todo Column -->
+                    <div class="stage-col">
+                        <h3 class="text-xs font-bold uppercase tracking-wider mb-3 flex items-center gap-2"><span
+                                class="w-2 h-2 bg-gray-400 rounded-full"></span> Todo <span id="todo-count"
+                                class="text-gray-400">0</span></h3>
+                        <div id="todo-list" class="space-y-2"></div>
+                    </div>
+                    
+                    <!-- In Progress Column -->
+                    <div class="stage-col">
+                        <h3 class="text-xs font-bold uppercase tracking-wider mb-3 flex items-center gap-2"><span
+                                class="w-2 h-2 bg-black rounded-full"></span> In Progress <span id="progress-count"
+                                class="text-gray-400">0</span></h3>
+                        <div id="progress-list" class="space-y-2"></div>
+                    </div>
+                    
+                    <!-- Done Column -->
+                    <div class="stage-col">
+                        <h3 class="text-xs font-bold uppercase tracking-wider mb-3 flex items-center gap-2"><span
+                                class="w-2 h-2 bg-green-600 rounded-full"></span> Done <span id="done-count"
+                                class="text-gray-400">0</span></h3>
+                        <div id="done-list" class="space-y-2"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Empty State -->
+            <div id="empty-state" class="flex-1 flex items-center justify-center hidden">
+                <div class="text-center">
+                    <p class="text-sm text-gray-400">No tasks yet. Add one above.</p>
+                </div>
+            </div>
+            
+            <!-- Limit Warning -->
+            <div id="limit-warning"
+                class="hidden bg-yellow-50 border border-yellow-300 text-yellow-800 text-xs px-4 py-2 text-center">
+                Maximum 999 tasks reached. Delete some to add more.
+            </div>
+        </div>
+        
+        <!-- ==================== MODALS ==================== --> <!-- Edit Task Modal -->
+        <div id="edit-modal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
+            <div class="bg-white border border-black p-5 w-full max-w-sm space-y-3 fade-in">
+                <h3 class="font-bold text-sm">Edit Task</h3><input id="edit-title" type="text"
+                    class="w-full border border-black px-3 py-1.5 text-sm focus:outline-none"> <input id="edit-desc"
+                    type="text" class="w-full border border-gray-300 px-3 py-1.5 text-sm focus:outline-none"> <select
+                    id="edit-stage" class="w-full border border-black px-3 py-1.5 text-sm focus:outline-none">
+                    <option value="TODO">Todo</option>
+                    <option value="IN_PROGRESS">In Progress</option>
+                    <option value="DONE">Done</option>
+                </select>
+                <div class="flex gap-2"><button id="edit-save"
+                        class="flex-1 bg-black text-white py-1.5 text-sm font-medium hover:bg-gray-800">Save</button>
+                    <button id="edit-cancel"
+                        class="flex-1 border border-black py-1.5 text-sm font-medium hover:bg-gray-100">Cancel</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Delete Confirm Modal -->
+        <div id="delete-modal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
+            <div class="bg-white border border-black p-5 w-full max-w-xs space-y-3 fade-in">
+                <p class="text-sm font-medium">Delete this task?</p>
+                <div class="flex gap-2"><button id="delete-confirm"
+                        class="flex-1 bg-black text-white py-1.5 text-sm font-medium hover:bg-gray-800">Delete</button>
+                    <button id="delete-cancel"
+                        class="flex-1 border border-black py-1.5 text-sm font-medium hover:bg-gray-100">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Toast Container -->
+    <div id="toast-container" class="fixed bottom-4 right-4 space-y-2 z-50 max-w-sm pointer-events-none"></div>
+    <script src="main.js"></script>
+</body>
+
+</html>

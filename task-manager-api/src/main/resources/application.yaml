@@ -1,0 +1,25 @@
+spring:
+  application:
+    name: task-manager-api
+
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_UNAME}
+    password: ${DB_PASS}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+        highlight_sql: true
+    show-sql: true
+
+app:
+  jwt:
+    secret: ${JWT_SECRET}
+    expiration: ${JWT_EXP} # in milliseconds
+  cors:
+    allowed-origins: ${ALLOWED_ORIGINS}
